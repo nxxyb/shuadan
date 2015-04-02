@@ -1,0 +1,62 @@
+<#assign basePath=request.contextPath>
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- title start-->
+   <#include "../../common/title.html">
+  <!-- title end-->
+  
+  <!-- link start-->
+   <#include "../../common/link.html">
+  <!-- link end-->
+  
+</head>
+
+<body>
+  <!-- header start-->
+  <#include "../../common/header.html">
+  <!-- header end -->
+  
+<div class="container" style="margin-top: 5%;margin-bottom: 15%;">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="row clearfix">
+				<div class="col-md-3 column">
+				</div>
+				<div class="col-md-6 column">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							<h3 class="panel-title lead">
+								<strong>邮件验证</strong>
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="col-sm-offset-1 col-sm-10">
+								<h4>邮件验证成功<span class="dj"></span></h4>
+								<h4><small>您的账号是:${(user.email)!""}</small></h4>
+								<hr>
+								<h4><small>
+									<ul class="list-inline">
+										<li><a href="${basePath}/user/toLogin">登录</a></li>
+										<li><a href="${basePath}/index">返回首页</a></li>
+									</ul>
+								</small></h4>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 column">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+    
+  <!-- footer start-->
+  <#include "../../common/footer.html">
+  <!-- footer end -->
+  
+  </body>
+</html>

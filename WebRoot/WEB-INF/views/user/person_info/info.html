@@ -1,0 +1,175 @@
+<form id="info_form" action="${basePath}/userinfo/updateUserInfo" method="post" name="person_from">
+	<h4 class="title"></h4>
+	<h4 class="title">基本信息</h4>
+	
+	<input type="hidden"" name="id" value="${(Session.user.id)!''}">
+	<div>
+		<label class="title">头像：</label>
+		<a class="link" href="#" onclick="openHeadPhotoDiv();return false;">修改头像</a>
+	</div>
+	
+	<div>
+		<label class="title">昵称：</label><input id="nackName" type="text" name="nackName" size="50" placeholder="50个汉字或字母" value="${(Session.user.nackName)!''}">
+	</div>
+	
+	<div>
+		<label class="title">性别：</label>
+		<input name="sex" id="man" type="radio" value="0" <#if Session.user?? && Session.user.sex?? && Session.user.sex == "0">checked="checked"</#if>/> 
+		<label for="man">男</label>
+		<input name="sex" id="woman" type="radio" value="1" <#if Session.user?? && Session.user.sex?? && Session.user.sex == "1">checked="checked"</#if>/> 
+		<label for="woman">女</label> 
+	</div>
+	
+	<div>
+		<label class="title">邮箱：</label><input id="email" type="email" name="email" placeholder="邮箱地址" value="${(Session.user.email)!''}" maxlength="50" disabled="disabled">
+	</div>
+	
+	<div>
+		<label class="title">个性签名：</label><input id="personSignature" type="text" name="personSignature" placeholder="个性签名" maxlength="50" value="${(Session.user.personSignature)!''}">
+	</div>
+	
+	<h4 class="title"></h4>
+	<h4 class="title">更多信息</h4>
+	<div>
+		<label class="title">生日：</label>
+		<input name="birthDay" id="birthDay" type="date"/> 
+	</div>
+	
+	<div>
+		<label class="title">QQ：</label><input id="qqNumber" type="text" name="qqNumber" placeholder="QQ号码" maxlength="50" value="${(Session.user.qqNumber)!''}">
+	</div>
+	
+	<div>
+		<label class="title">地址：</label>
+		<select id="province" name="province" class="select_3span" class="frm-field required" ></select>
+		<select id="city" name="city" class="select_3span" class="frm-field required"></select>
+		<select id="county" name="county" class="select_3span" class="frm-field required"></select>
+	</div>
+	
+	<h4 class="title"></h4>
+	<h4 class="title">验证信息</h4>
+	<div>
+		<label class="title">真实姓名：</label><input id="realName" type="text" name="realName" size="50" placeholder="50个汉字或字母" value="${(Session.user.realName)!''}">
+	</div>
+	
+	<div>
+		<label class="title">手机号码：</label><input type="text" name="mobile" pattern=".{11}" title="请输入11位手机号码" placeholder="手机号码" value="${(Session.user.mobile)!''}">
+	</div>
+	
+	<#if Session.user?? && Session.user.type?? && Session.user.type == '3'>
+		<div>
+			<label class="title">身份证号：</label><input type="text" name="idCard" pattern=".{18}" title="请输入18位身份证号码" placeholder="身份证号" required="required" value="${(Session.user.idCard)!''}">
+		</div>
+		<div>
+			<label class="title">验证照片：</label>
+			<img class="breviaryimg" alt="验证照片" src="${basePath}/${(Session.user.comfirmPic)!'${basePath}/images/person/photo.jpg'}">
+			<#if Session.user?? && Session.user.verify?? && Session.user.verify != '1'>
+			<a class="link" href="#" onclick="openComfirmPhotoDiv();return false;">修改验证照片</a>
+			</#if>
+		</div>
+	</#if>
+	
+	<#if Session.user?? && Session.user.type?? && Session.user.type == '4'>
+		<div>
+			<label class="title">单位名称：</label><input type="text" name="companyName" maxlength="50" placeholder="单位名称" required="required" value="${(Session.user.companyName)!''}">
+		</div>
+		<div>
+			<label class="title">法人身份证号：</label><input type="text" name="idCard" pattern=".{18}" title="请输入18位身份证号码" placeholder="法人身份证号" required="required" value="${(Session.user.idCard)!''}">
+		</div>
+		<div>
+			<label class="title">验证照片：</label>
+			<img class="breviaryimg" alt="验证照片" src="${basePath}/${(Session.user.comfirmPic)!'images/person/photo.jpg'}">
+			<#if Session.user?? && Session.user.verify?? && Session.user.verify != '1'>
+			<a class="link" href="#" onclick="openComfirmPhotoDiv();return false;">修改验证照片</a>
+			</#if>
+		</div>
+	</#if>
+</form>
+
+<div style="margin-top: 4%;">
+		<button class="grey" onclick="photography_ajaxsubmit('info_form','保存成功');return false;" >保存</button>
+</div>
+
+<script type="text/javascript">
+_init_area();
+_init_area_value('${(Session.user.province)!""}','${(Session.user.city)!""}','${(Session.user.county)!""}');
+
+function openHeadPhotoDiv(){
+	var i = $.layer({
+		type : 1, //0-4的选择,（1代表page层）
+		area : [ '500px', '300px' ],
+		shade: [0.5, '#000'],  //遮罩
+		border : [ 0 ], //不显示边框
+		title : [ '修改头像','border:none; background:#4cb1ca; color:#fff;' ],
+		closeBtn: [1, true], //设置关闭按钮
+		btns: 1,btn: ['确定'],
+		bgcolor : '#eee', //设置层背景色
+		shift : 'top', //从上动画弹出
+		page : {
+			html : '<form id="headform" action="${basePath}/userinfo/updateHeadPhoto" enctype="multipart/form-data" method="post"><div class="divwrap">' + 
+				   '<input type="file" id="headinput" name="headFile" placeholder="选择头像" onchange="reviewImg(this);" accept="image/*">' + 
+				   '<h4 class="title"></h4><div>头像预览</div>' + 
+				   '<div><img id="headimg" class="breviaryimg" alt="头像" src="${basePath}/images/person/photo.jpg"></div></div></form>'
+		},
+		yes: function(index){
+			var options = { 
+            type: "post",
+            dataType: "json",
+            url: "${basePath}/userinfo/updateHeadPhoto",
+            success: function(msg){
+            	if(msg != '1')
+            		alert(msg);
+               }
+            };
+            $('#headform').ajaxSubmit(options);
+            layer.close(i);
+		}
+	});
+}
+	
+	function reviewImg(fileInput){
+        var objUrl = getObjectURL(fileInput.files[0]);
+        if (objUrl) {
+            $("#headimg").attr("src", objUrl) ;
+        }
+    }
+    
+function openComfirmPhotoDiv(){
+	var i = $.layer({
+		type : 1, //0-4的选择,（1代表page层）
+		area : [ '500px', '300px' ],
+		shade: [0.5, '#000'],  //遮罩
+		border : [ 0 ], //不显示边框
+		title : [ '修改验证照片','border:none; background:#4cb1ca; color:#fff;' ],
+		closeBtn: [1, true], //设置关闭按钮
+		btns: 1,btn: ['确定'],
+		bgcolor : '#eee', //设置层背景色
+		shift : 'top', //从上动画弹出
+		page : {
+			html : '<form id="comfirmform" action="${basePath}/userinfo/updateComfirmPhoto" enctype="multipart/form-data" method="post"><div class="divwrap">' + 
+				   '<input type="file" id="comfirminput" name="comfirmFile" placeholder="选择验证照片" onchange="reviewConfirmImg(this);" accept="image/*">' + 
+				   '<h4 class="title"></h4><div>验证照片预览</div>' + 
+				   '<div><img id="comfirmimg" style="width: 80%;height: 80%;" alt="验证照片" src="${basePath}/images/person/photo.jpg"></div></div></form>'
+		},
+		yes: function(index){
+			var options = { 
+            type: "post",
+            dataType: "json",
+            url: "${basePath}/userinfo/updateComfirmPhoto",
+            success: function(msg){
+            	if(msg != '1')
+            		alert(msg);
+               }
+            };
+            $('#comfirmform').ajaxSubmit(options);
+            layer.close(i);
+		}
+	});
+}
+	function reviewConfirmImg(fileInput){
+        var objUrl = getObjectURL(fileInput.files[0]);
+        if (objUrl) {
+            $("#comfirmimg").attr("src", objUrl) ;
+        }
+    }
+</script>

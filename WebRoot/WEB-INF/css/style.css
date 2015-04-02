@@ -1,0 +1,27 @@
+.weixin{
+	float: left;
+	width: 50px;
+	height: 27px;
+	background: url("../images/indexTool.png") no-repeat -35px -290px;
+}
+
+.weibo{
+	float: left;
+	width: 50px;
+	height: 27px;
+	background: url("../images/indexTool.png") no-repeat -90px -290px;
+}
+
+.qq{
+	float: left;
+	width: 50px;
+	height: 27px;
+	background: url("../images/indexTool.png") no-repeat -140px -290px;
+}
+
+.dj{
+	float: left;
+	width: 22px;
+	height: 25px;
+	background: url("../images/indexTool.png") no-repeat -160px -460px;
+}

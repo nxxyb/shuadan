@@ -1,0 +1,58 @@
+
+<nav class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="collapse navbar-collapse">
+			<div class="navbar-text navbar-left">
+				<!-- 地区选择 -->
+				<#include "locate.html">
+			</div>
+			<ul class="nav navbar-nav navbar-collapse navbar-right">
+				<#if Session.user?exists>
+					<li><a>欢迎您 ${(Session.user.nackName)!(Session.user.email)!""}</a></li>
+					<li><a href="${basePath}/userinfo/toUserInfo">个人中心</a></li>
+					<li><a href="${basePath}/user/logout">退出登录</a></li>
+				<#else>
+					<li><a href="${basePath}/user/toLogin">登录</a></li>
+					<li><a href="${basePath}/user/toRegister">注册</a></li>
+				</#if>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="main-header">
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="row clearfix">
+				<div class="col-sm-3 col-md-3 column">
+					<img src="${basePath}/images/logo.png" />
+				</div>
+				<div class="col-sm-9 col-md-9 column">
+					<ul class="nav nav-pills">
+						<li class="active"><a href="${basePath}/index">首页</a></li>
+						<li><a href="#">摄影活动</a></li>
+						<li><a href="#">作品展示</a></li>
+						<li><a href="#">社区</a></li>
+						
+						<li class="pull-right">
+							<form class="navbar-form" role="search">
+								<div class="form-group">
+									<div class="input-group">
+										<input type="text" class="form-control" placeholder="搜索活动">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="button">搜索</button>
+										</span>
+									</div>
+								</div>
+								<button type="button" class="btn btn-warning">我的订单</button>
+							</form>
+						</li>
+					</ul>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

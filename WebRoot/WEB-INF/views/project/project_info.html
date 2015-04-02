@@ -1,0 +1,226 @@
+<#assign basePath=request.contextPath>
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- title start-->
+   <#include "../common/title.html">
+  <!-- title end-->
+  
+  <!-- link start-->
+   <#include "../common/link.html">
+   <link href="${basePath}/css/project.css" rel="stylesheet" type="text/css" media="all" />
+   <script src="${basePath}/js/slides.min.jquery.js"></script>
+  <!-- link end-->
+  
+</head>
+
+<body>
+  <!-- header start-->
+  <#include "../common/header.html">
+  <!-- header end -->
+  
+<script type="text/javascript">
+function init_slides(){
+	$('#products').slides({
+		preload: true,
+		play:10000,
+		effect: 'slide, fade',
+		crossfade: true,
+		slideSpeed: 100,
+		fadeSpeed: 500,
+		generateNextPrev: false,
+		generatePagination: false
+	});
+}
+$(function(){
+	init_slides();
+});
+
+function reviewImg(fileInput,id){
+     var objUrl = getObjectURL(fileInput.files[0]);
+     if (objUrl) {
+         $("#" + id).attr("src", objUrl);
+         $("#slides_" + id).attr("src", objUrl);
+   }
+}
+
+</script>
+
+<#if (project.photos)??>
+<#assign imgs =((project.photos)?split(","))>
+</#if>
+
+<div class="mens">    
+  <div class="main">
+  <form action="${basePath}/project/create" method="post" enctype="multipart/form-data">
+  	<input type="hidden" name="id" value="${(project.id)!''}">
+     <div class="wrap">
+     	<ul class="breadcrumb breadcrumb__t"><a class="home" href="#">首页</a> / <a href="#">活动</a> / 新建活动</ul>
+		<div class="cont span_all">
+				<div id="container">
+					<div id="products_example">
+						<div id="products">
+							<div class="slides_container">
+							 	<a href="#"><img id="slides_img1" class="a" src="${basePath}/${(imgs[0])!''}" alt=""/></a>
+							 	<a href="#"><img id="slides_img2" class="a" src="${basePath}/${(imgs[1])!''}" alt=""/></a>
+							   	<a href="#"><img id="slides_img3" class="a" src="${basePath}/${(imgs[2])!''}" alt=""/></a>
+							   <!--  <a href="#"><img class="a" src="" alt=""/></a> -->
+							</div>
+							<div class="clear"></div>
+							<div>
+							<ul class="pagination">
+								<li><a href="#"><img id="img1" src="${basePath}/${(imgs[0])!''}"></a></li>
+								<li><a href="#"><img id="img2" src="${basePath}/${(imgs[1])!''}"></a></li>
+								<li><a href="#"><img id="img3" src="${basePath}/${(imgs[2])!''}"></a></li>
+								<!--<li><a href="#"></a></li> -->
+							</ul>
+							</div>
+							<div class="clear"></div>
+							<div class="addimg">
+							<a href="#"><img src="${basePath}/images/project/upload.jpg"><input id="img1_file" name="imgFiles" type="file" onchange="reviewImg(this,'img1');" accept="image/*"></a>
+							<a href="#"><img src="${basePath}/images/project/upload.jpg"><input id="img2_file" name="imgFiles" type="file" onchange="reviewImg(this,'img2');" accept="image/*"></a>
+							<a href="#"><img src="${basePath}/images/project/upload.jpg"><input id="img3_file" name="imgFiles" type="file" onchange="reviewImg(this,'img3');" accept="image/*"></a>
+							<!-- <a href="#"><img src="${basePath}/images/project/upload.jpg"><input type="file"  ></a> -->
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+	     </div>
+	     
+	     <div class="project-cont span_2_of_3">
+	         <div class="box-white">
+		         	<h3 class="project-title">
+		         		<label class="project-title-lable">名称：</label>
+		         		<input class="project-input" name="name" type="text" value="${(project.name)!''}">
+		         	</h3>
+		         	
+		         	<h4 class="project-info">
+			         	<label class="project-title-lable">活动类型：</label>
+			         	<select class="project-input1" name="type" >
+			         		<option value="1" <#if (project.type)?? && project.type == "1">selected</#if>>市内采风</option>
+			         		<option value="2" <#if (project.type)?? && project.type == "2">selected</#if>>远郊采风</option>
+			         		<option value="3" <#if (project.type)?? && project.type == "3">selected</#if>>说拍就拍</option>
+			         		<option value="4" <#if (project.type)?? && project.type == "4">selected</#if>>一对一</option>
+			         	</select>
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+			         	<label class="project-title-lable">开始时间:</label>
+			         	<input class="project-input1" type="datetime-local" name="startTime" value="${(project.startTime)!''}">
+			         	<label class="project-title-lable">预计时长:</label>
+			         	<input class="project-input1" type="text" name="timeLength" value="${(project.timeLength)!''}">
+		         	</h4>
+		         	<h4 class="project-info">
+		         		<label class="project-title-lable">最大人数:</label>
+		         		<input class="project-input1" type="number" name="peopleNum" value="${(project.peopleNum)!''}">
+		         		<label class="project-title-lable">最小人数:</label>
+		         		<input class="project-input1" type="number" name="lessNum" value="${(project.lessNum)!''}">
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+		         		<label class="project-title-lable">地点:</label>
+		         		<input class="project-input1" type="text" name="place" value="${(project.place)!''}">
+		         		<label class="project-title-lable">集合地点:</label>
+		         		<input class="project-input1" type="text" name="venuePlace" value="${(project.venuePlace)!''}">
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+		         		<label class="project-title-lable">联系方式:</label>
+		         		<input class="project-input1" type="text" name="contact" value="${(project.contact)!''}">
+		         		<label class="project-title-lable">模特数量:</label>
+		         		<input class="project-input1" type="number" name="modelNum" value="${(project.modelNum)!''}">
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+			         	<label class="project-title-lable">费用:</label>
+			         	<input class="project-input1" type="text" name="cost" value="${(project.cost)!''}">
+		         	</h4>
+		     </div>
+		     
+		      <div class="box-white">
+		         	<h4 class="project-info">
+		         		<label class="project-title-lable">活动简介:</label>
+		         		<textarea class="project-input" rows="5" name="des">${(project.des)!''}</textarea>
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+		         		
+		         		<label class="project-title-lable">行程安排:</label>
+		         		<textarea class="project-input" rows="5" name=""></textarea>
+		         	</h4>
+		         	
+		         	<h4 class="project-info">
+		         		<label class="project-title-lable">费用说明:</label>
+		         		<textarea class="project-input" rows="5" name=""></textarea>
+		         	</h4>
+		     </div>
+		     
+		     <div class="project-submit">
+				<input type="submit" value="发布" title="">
+			 </div>
+		     
+		     
+		     
+		</div>  
+	        
+      
+		<div class="rsingle span_1_of_single">
+			<h5 class="m_1">Categories</h5>
+				<select class="dropdown" tabindex="8" data-settings='{"wrapperClass":"metro"}'>
+					<option value="1">Mens</option>
+					<option value="2">Sub Category1</option>
+					<option value="3">Sub Category2</option>
+					<option value="4">Sub Category3</option>
+				</select>
+				<select class="dropdown" tabindex="8" data-settings='{"wrapperClass":"metro"}'>
+					<option value="1">Womens</option>
+					<option value="2">Sub Category1</option>
+					<option value="3">Sub Category2</option>
+					<option value="4">Sub Category3</option>
+				</select>
+				<ul class="kids">
+					<li><a href="#">Kids</a></li>
+					<li class="last"><a href="#">Glasses Shop</a></li>
+				</ul>
+                  <section  class="sky-form">
+				<h4>Price</h4>
+					<div class="row row1 scroll-pane">
+						<div class="col col-4">
+							<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>Rs 500 - Rs 700</label>
+						</div>
+						<div class="col col-4">
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 700 - Rs 1000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 1000 - Rs 1500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 1500 - Rs 2000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 2000 - Rs 2500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox" ><i></i>Rs 2500 - Rs 3000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 3500 - Rs 4000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 4000 - Rs 4500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 4500 - Rs 5000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 5000 - Rs 5500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 5500 - Rs 6000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 6000 - Rs 6500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 6500 - Rs 7000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 7000 - Rs 7500</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 7500 - Rs 8000</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Rs 8000 - Rs 8500</label>	
+						</div>
+					</div>
+	        </section>
+	     
+	      </div>
+		      
+		      
+	      <div class="clear"></div>
+		 </div>
+		 </form>          
+	</div>
+</div>
+
+		<!-- footer start-->
+  <#include "../common/footer.html">
+  <!-- footer end -->
+  
+  </body>
+</html>

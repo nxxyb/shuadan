@@ -1,0 +1,35 @@
+<#assign basePath=request.contextPath>
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- title start-->
+   <#include "../common/title.html">
+  <!-- title end-->
+  
+  <!-- link start-->
+   <#include "../common/link.html">
+   <link href="${basePath}/css/error.css" rel="stylesheet" type="text/css" media="all" />
+  <!-- link end-->
+  
+</head>
+
+<body>
+  <!-- header start-->
+  <#include "../common/header.html">
+  <!-- header end -->
+
+		<div class="login">
+			<div class="wrap">
+				<div class="page-not-found">
+					<h4>${error_message!""}</h4>
+					<h5><a href="javascript:history.go(-1)">返回</a></h5>
+				</div>
+			</div>
+		</div>
+
+		<!-- footer start-->
+  <#include "../common/footer.html">
+  <!-- footer end -->
+  
+  </body>
+</html>

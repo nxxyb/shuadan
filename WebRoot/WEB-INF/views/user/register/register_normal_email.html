@@ -1,0 +1,63 @@
+<#assign basePath=request.contextPath>
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- title start-->
+   <#include "../../common/title.html">
+  <!-- title end-->
+  
+  <!-- link start-->
+   <#include "../../common/link.html">
+  <!-- link end-->
+  
+</head>
+
+<body>
+  <!-- header start-->
+  <#include "../../common/header.html">
+  <!-- header end -->
+  
+<div class="container" style="margin-top: 5%;margin-bottom: 15%;">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="row clearfix">
+				<div class="col-md-3 column">
+				</div>
+				<div class="col-md-6 column">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							<h3 class="panel-title lead">
+								<strong>邮件验证</strong>
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="col-sm-offset-1 col-sm-10">
+								<h4>您的账号已注册成功<span class="dj"></span></h4>
+								<hr>
+								<h4><small>我们向您的注册邮箱${email!""}发送了一封验证邮件。</small></h4>
+								<h4><small>为正常使用网站的全部功能，请点击邮件内链接完成邮箱验证。</small></h4>
+								<h4><small>如果没有收到验证邮件，请点击<a class="link" href="${basePath}/user/reSendEmail?email=${email!""}"> 重新发送验证邮件。</a></small></h4>
+							
+								<hr>
+								<h4>没有收到验证邮件？</h4>
+								<h4><small>1. 到广告邮件、垃圾邮件目录里找找看。</small></h4>
+								<h4><small>2. 填错了？修改邮箱。</small></h4>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 column">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+    
+  <!-- footer start-->
+  <#include "../../common/footer.html">
+  <!-- footer end -->
+  
+  </body>
+</html>

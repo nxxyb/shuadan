@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        ">
+	
+	<!--<bean id="propertyConfigurer" 
+          class="com.photography.utils.CustomizedPropertyPlaceholderConfigurer">
+        <property name="locations">
+        	<list>
+        		<value>classpath:jdbc.properties</value>
+        		<value>classpath:system.properties</value>
+        	</list>
+        </property>
+    </bean>
+
+	-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/shuadan?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="user" value="root" />
+		<property name="password" value="" />
+
+		<!-- 连接关闭时默认将所有未提交的操作回滚。默认为false -->
+		<property name="autoCommitOnClose" value="true" />
+
+		<!-- 连接池中保留的最小连接数 -->
+		<property name="minPoolSize" value="2" />
+
+		<!-- 连接池中保留的最大连接数。默认为15 -->
+		<property name="maxPoolSize" value="15" />
+
+		<!-- 初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。默认为3 -->
+		<property name="initialPoolSize" value="3" />
+
+		<!-- 最大空闲时间，超过空闲时间的连接将被丢弃。为0或负数则永不丢弃。默认为0秒 -->
+		<property name="maxIdleTime" value="60" />
+
+		<!-- 当连接池中的连接用完时，C3P0一次性创建新连接的数目。默认为3 -->
+		<property name="acquireIncrement" value="3" />
+
+		<!-- 定义在从数据库获取新连接失败后重复尝试获取的次数，默认为30 -->
+		<property name="acquireRetryAttempts" value="3" />
+
+		<!-- 当连接池用完时客户端调用getConnection()后等待获取新连接的时间，超时后将抛出SQLException，如设为0则无限期等待。单位毫秒，默认为0 -->
+		<property name="checkoutTimeout" value="10000" />
+	</bean>  
+
+	<bean id="hibernateProperties"
+	class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				 <prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				<!-- <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</prop> -->
+				<!-- <prop key="hibernate.cache.provider_configuration_file_resource_path">ehcache.xml</prop> -->
+				<prop key="format_sql">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="connection.autocommit">true</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.max_fetch_depth">3</prop>
+				<prop key="hibernate.jdbc.batch_size">100</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		
+		<property name="hibernateProperties">
+			<ref bean="hibernateProperties"/>
+		</property>
+		 <property name="packagesToScan">
+            <list>
+                <value>com.photography.mapping</value>
+            </list>
+        </property>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+	</bean>
+	
+	<!-- 配置事务管理器 -->
+  <bean name="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"></property>
+  </bean>
+
+  <!-- 拦截器方式配置事物 -->
+  <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
+    <tx:attributes>
+      <tx:method name="save*" propagation="REQUIRED"/>
+      <tx:method name="delete*" propagation="REQUIRED"/>
+      <tx:method name="*" propagation="REQUIRED" read-only="true" />
+    </tx:attributes>
+  </tx:advice>
+  <aop:config>
+    <aop:pointcut id="transactionPointcut" expression="execution(* com.photography.service.*.*(..))" /> 
+    <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
+  </aop:config>
+  
+  <context:component-scan base-package="com.photography">   
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />   
+</context:component-scan>
+
+
+</beans>
