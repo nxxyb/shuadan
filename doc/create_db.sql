@@ -12,16 +12,18 @@ CREATE TABLE `shuadan_user` (
   `chezhu_mobile` varchar(50) comment '车主手机号',
   `chezhu_password` varchar(50) comment '车主密码',
   `chezhu_city` varchar(50) comment '车主所在城市',
-  `chezhu_place` varchar(40) comment '车主所在道路或地名',
+  `chezhu_jplace` varchar(40) comment '车主家所在道路或地名',
+  `chezhu_dplace` varchar(40) comment '车主单位所在道路或地名',
   `chengke_name` varchar(50) comment '乘客姓名',
   `chengke_mobile` varchar(50) comment '乘客手机号',
   `chengke_password` varchar(50) comment '乘客密码',
   `chengke_city` varchar(50) comment '乘客所在城市',
-  `chengke_place` varchar(40) comment '乘客所在道路或地名',
-  `chengke_fd` varchar(40) comment '乘客是否发单 0-未发 1-已发  2-已发且有车主正在抢单 3-车主抢单完成 4-乘客付款完成 5-乘客确认搭乘 6-乘客评价完成',
+  `chengke_jplace` varchar(40) comment '乘客家所在道路或地名',
+  `chengke_dplace` varchar(40) comment '乘客单位所在道路或地名',
+  `fd_status` varchar(40) comment '乘客是否发单 0-未发 1-已发  2-已发且有车主正在抢单 3-车主抢单完成  4-乘客确认搭乘 5-乘客评价完成',
+  `fk_status` varchar(40) comment '乘客是否付款 0-未付 1-已付',
   `chengke_fd_time` varchar(40) comment '乘客发单时间',
   `chezhu_qd_time` varchar(40) comment '车主抢单时间'
-  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -36,7 +38,7 @@ CREATE TABLE `shuadan_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /** 插入用户*/
-insert into shuadan_user (chezhu_name, chezhu_mobile, chezhu_password, chezhu_city, chezhu_place, chengke_name, chengke_mobile, chengke_password, chengke_city, chengke_place, chengke_fd,chengke_fd_time,chezhu_qd_time)
-                  values ('徐雁斌'   , '18622535271', '5034718'       ,'天津',       '侯台',       '郑向辉',     '13821008956',  '604561',         '天津市',      '雅士道',      '0',        '',            ''            );
+insert into shuadan_user (chezhu_name, chezhu_mobile, chezhu_password, chezhu_city, chezhu_jplace, chezhu_dplace, chengke_name, chengke_mobile, chengke_password, chengke_city, chengke_jplace, chengke_dplace,fd_status,fk_status,chengke_fd_time,chezhu_qd_time)
+                  values ('徐雁斌'   , '18622535271', '5034718'       ,'天津',       '侯台',        '海泰发展',     '郑向辉',     '13821008956',  '604561',         '天津',      '侯台',         '天津南站',      '0',      '0',      '',            ''            );
 
 

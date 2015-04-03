@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import com.photography.utils.Constants;
 
 /**
- * 日志
+ * 用户
  * @author 徐雁斌
  * @since 2015-2-5
  */
@@ -40,10 +40,16 @@ public class ShuadanUser extends BaseMapping{
 	private String chezhu_city;
 	
 	/**
-	 * 车主所在道路或地名
+	 * 车主家地址
 	 */
-	@Column(name="chezhu_place")
-	private String chezhu_place;
+	@Column(name="chezhu_jplace")
+	private String chezhu_jplace;
+	
+	/**
+	 * 车主单位地址
+	 */
+	@Column(name="chezhu_dplace")
+	private String chezhu_dplace;
 	
 	/**
 	 * 乘客姓名
@@ -70,19 +76,32 @@ public class ShuadanUser extends BaseMapping{
 	private String chengke_city;
 	
 	/**
-	 * 乘客所在道路或地名
+	 * 乘客家道路或地名
 	 */
-	@Column(name="chengke_place")
-	private String chengke_place;
+	@Column(name="chengke_jplace")
+	private String chengke_jplace;
 	
 	/**
-	 * 乘客是否发单 
+	 * 乘客单位道路或地名
+	 */
+	@Column(name="chengke_dplace")
+	private String chengke_dplace;
+	
+	/**
+	 * 乘客发单状态 
 	 * 0-未发 1-已发  2-已发且有车主正在抢单 
 	 * 3-车主抢单完成 4-乘客付款完成 
 	 * 5-乘客确认搭乘 6-乘客评价完成
 	 */
-	@Column(name="chengke_fd")
-	private String chengke_fd;
+	@Column(name="fd_status")
+	private String fd_status;
+	
+	/**
+	 * 乘客付款状态 
+	 * 0-未付 1-已付
+	 */
+	@Column(name="fk_status")
+	private String fk_status;
 	
 	/**
 	 * 乘客发单时间
@@ -128,14 +147,6 @@ public class ShuadanUser extends BaseMapping{
 		this.chezhu_city = chezhu_city;
 	}
 
-	public String getChezhu_place() {
-		return chezhu_place;
-	}
-
-	public void setChezhu_place(String chezhu_place) {
-		this.chezhu_place = chezhu_place;
-	}
-
 	public String getChengke_name() {
 		return chengke_name;
 	}
@@ -168,14 +179,6 @@ public class ShuadanUser extends BaseMapping{
 		this.chengke_city = chengke_city;
 	}
 
-	public String getChengke_place() {
-		return chengke_place;
-	}
-
-	public void setChengke_place(String chengke_place) {
-		this.chengke_place = chengke_place;
-	}
-
 	public String getChengke_fd_time() {
 		return chengke_fd_time;
 	}
@@ -191,31 +194,74 @@ public class ShuadanUser extends BaseMapping{
 	public void setChezhu_qd_time(String chezhu_qd_time) {
 		this.chezhu_qd_time = chezhu_qd_time;
 	}
-
-	public String getChengke_fd() {
-		return chengke_fd;
-	}
-
-	public void setChengke_fd(String chengke_fd) {
-		this.chengke_fd = chengke_fd;
-	}
 	
+	public String getFd_status() {
+		return fd_status;
+	}
+
+	public void setFd_status(String fd_status) {
+		this.fd_status = fd_status;
+	}
+
+	public String getFk_status() {
+		return fk_status;
+	}
+
+	public void setFk_status(String fk_status) {
+		this.fk_status = fk_status;
+	}
+
+	public String getChezhu_jplace() {
+		return chezhu_jplace;
+	}
+
+	public void setChezhu_jplace(String chezhu_jplace) {
+		this.chezhu_jplace = chezhu_jplace;
+	}
+
+	public String getChezhu_dplace() {
+		return chezhu_dplace;
+	}
+
+	public void setChezhu_dplace(String chezhu_dplace) {
+		this.chezhu_dplace = chezhu_dplace;
+	}
+
+	public String getChengke_jplace() {
+		return chengke_jplace;
+	}
+
+	public void setChengke_jplace(String chengke_jplace) {
+		this.chengke_jplace = chengke_jplace;
+	}
+
+	public String getChengke_dplace() {
+		return chengke_dplace;
+	}
+
+	public void setChengke_dplace(String chengke_dplace) {
+		this.chengke_dplace = chengke_dplace;
+	}
+
 	public String toString(){
 		StringBuffer sf = new StringBuffer();
-		sf.append(this.getId()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_name()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_mobile()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_password()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_city()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_place()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_name()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_mobile()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_password()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_city()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_place()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_fd()).append(Constants.SEPARATOR);
-		sf.append(this.getChengke_fd_time()).append(Constants.SEPARATOR);
-		sf.append(this.getChezhu_qd_time());
+		sf.append(this.getId()).append(Constants.SEPARATOR);					//0 id
+		sf.append(this.getChezhu_name()).append(Constants.SEPARATOR);			//1 车主姓名
+		sf.append(this.getChezhu_mobile()).append(Constants.SEPARATOR);			//2 车主手机
+		sf.append(this.getChezhu_password()).append(Constants.SEPARATOR);		//3 车主密码
+		sf.append(this.getChezhu_city()).append(Constants.SEPARATOR);			//4 车主城市
+		sf.append(this.getChezhu_jplace()).append(Constants.SEPARATOR);			//5 车主家地址
+		sf.append(this.getChezhu_dplace()).append(Constants.SEPARATOR);			//6 车主单位地址
+		sf.append(this.getChengke_name()).append(Constants.SEPARATOR);			//7 乘客姓名
+		sf.append(this.getChengke_mobile()).append(Constants.SEPARATOR);		//8 乘客手机
+		sf.append(this.getChengke_password()).append(Constants.SEPARATOR);		//9 乘客密码
+		sf.append(this.getChengke_city()).append(Constants.SEPARATOR);			//10 乘客城市
+		sf.append(this.getChengke_jplace()).append(Constants.SEPARATOR);		//11 乘客家地址
+		sf.append(this.getChengke_dplace()).append(Constants.SEPARATOR);		//12 乘客单位地址
+		sf.append(this.getFd_status()).append(Constants.SEPARATOR);			    //13 拼车状态
+		sf.append(this.getFk_status()).append(Constants.SEPARATOR);			    //14 付款状态
+		sf.append(this.getChengke_fd_time()).append(Constants.SEPARATOR);		//15 乘客发单时间
+		sf.append(this.getChezhu_qd_time());									//16 车主抢单时间
 		
 		return sf.toString();
 	}

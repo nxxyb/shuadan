@@ -33,13 +33,10 @@ public class Constants {
 	//3-车主抢单完成
 	public final static String FD_TYPE_QDWC = "3";
 	
-	//4-乘客付款完成 
-	public final static String FD_TYPE_FKWC = "4";
-	
 	//5-乘客确认搭乘
-	public final static String FD_TYPE_QRDC = "5";
+	public final static String FD_TYPE_QRDC = "4";
 	
 	//6-乘客评价完成
-	public final static String FD_TYPE_PJWC = "6";
+	public final static String FD_TYPE_PJWC = "5";
 	
 }
