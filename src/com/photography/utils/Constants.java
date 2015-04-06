@@ -15,7 +15,7 @@ public class Constants {
 	public final static String NO = "0";
 	public final static String YES = "1";
 	
-	public final static String SEPARATOR = "|";
+	public final static String SEPARATOR = ",";
 	
 	
 	/**

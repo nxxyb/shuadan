@@ -105,8 +105,9 @@ public class ShuadanController extends BaseController{
 			result = Constants.NO;
 			return result;
 		}else{
+			result = user.toString();
 			log.error("根据ID(" + id + ") 获得车主用户信息：" + result);
-			return user.toString();
+			return result;
         }
 		
     }
