@@ -50,7 +50,7 @@ public class ShuadanController extends BaseController{
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getChengke",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public String getChengke() throws UnsupportedEncodingException{
+    public synchronized String getChengke() throws UnsupportedEncodingException{
 		String result = null;
 		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(Condition.eq("fd_status", Constants.FD_TYPE_WEIFA), new Sort("id","asc"));
 		if(users == null || users.isEmpty()){
@@ -72,10 +72,11 @@ public class ShuadanController extends BaseController{
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getChezhu",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public String getChezhu() throws UnsupportedEncodingException, ServiceException{
+    public synchronized String getChezhu() throws UnsupportedEncodingException, ServiceException{
 		String result = null;
 		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(Condition.eq("fd_status", Constants.FD_TYPE_YIFA), new Sort("id","asc"));
 		if(users == null || users.isEmpty()){
+			log.error("目前还没有符合条件的车主");
 			result = Constants.NO;
 		}else{
 			ShuadanUser user = users.get(0);
@@ -97,7 +98,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/getInfo",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public String getInfo(String id) throws UnsupportedEncodingException{
+    public synchronized String getInfo(String id) throws UnsupportedEncodingException{
 		String result = null;
 		ShuadanUser user = (ShuadanUser) shuadanUserService.loadPojo(id);
 		if(user == null){

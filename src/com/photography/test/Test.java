@@ -124,7 +124,7 @@ public class Test {
 	}
 	
 	public static void main(String[] args) {
-		Test1 t = new Test1();
+		Test t = new Test();
 		t.runChengke();
 		t.runChezhu();
 	}
