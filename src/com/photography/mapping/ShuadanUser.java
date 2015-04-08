@@ -52,6 +52,24 @@ public class ShuadanUser extends BaseMapping{
 	private String chezhu_dplace;
 	
 	/**
+	 * 车主设备序列号
+	 */
+	@Column(name="chezhu_deviceid")
+	private String chezhu_deviceid;
+	
+	/**
+	 * 车主支付宝帐号
+	 */
+	@Column(name="chezhu_zfb_num")
+	private String chezhu_zfb_num;
+	
+	/**
+	 * 车主支付宝密码
+	 */
+	@Column(name="chezhu_zfb_password")
+	private String chezhu_zfb_password;
+	
+	/**
 	 * 乘客姓名
 	 */
 	@Column(name="chengke_name")
@@ -86,6 +104,24 @@ public class ShuadanUser extends BaseMapping{
 	 */
 	@Column(name="chengke_dplace")
 	private String chengke_dplace;
+	
+	/**
+	 * 乘客设备序列号
+	 */
+	@Column(name="chengke_deviceid")
+	private String chengke_deviceid;
+	
+	/**
+	 * 乘客支付宝帐号
+	 */
+	@Column(name="chengke_zfb_num")
+	private String chengke_zfb_num;
+	
+	/**
+	 * 乘客支付宝密码
+	 */
+	@Column(name="chengke_zfb_password")
+	private String chengke_zfb_password;
 	
 	/**
 	 * 乘客发单状态 
@@ -243,6 +279,54 @@ public class ShuadanUser extends BaseMapping{
 		this.chengke_dplace = chengke_dplace;
 	}
 
+	public String getChezhu_deviceid() {
+		return chezhu_deviceid;
+	}
+
+	public void setChezhu_deviceid(String chezhu_deviceid) {
+		this.chezhu_deviceid = chezhu_deviceid;
+	}
+
+	public String getChezhu_zfb_num() {
+		return chezhu_zfb_num;
+	}
+
+	public void setChezhu_zfb_num(String chezhu_zfb_num) {
+		this.chezhu_zfb_num = chezhu_zfb_num;
+	}
+
+	public String getChezhu_zfb_password() {
+		return chezhu_zfb_password;
+	}
+
+	public void setChezhu_zfb_password(String chezhu_zfb_password) {
+		this.chezhu_zfb_password = chezhu_zfb_password;
+	}
+
+	public String getChengke_deviceid() {
+		return chengke_deviceid;
+	}
+
+	public void setChengke_deviceid(String chengke_deviceid) {
+		this.chengke_deviceid = chengke_deviceid;
+	}
+
+	public String getChengke_zfb_num() {
+		return chengke_zfb_num;
+	}
+
+	public void setChengke_zfb_num(String chengke_zfb_num) {
+		this.chengke_zfb_num = chengke_zfb_num;
+	}
+
+	public String getChengke_zfb_password() {
+		return chengke_zfb_password;
+	}
+
+	public void setChengke_zfb_password(String chengke_zfb_password) {
+		this.chengke_zfb_password = chengke_zfb_password;
+	}
+
 	public String toString(){
 		StringBuffer sf = new StringBuffer();
 		sf.append(this.getId()).append(Constants.SEPARATOR);					//0 id
@@ -261,7 +345,14 @@ public class ShuadanUser extends BaseMapping{
 		sf.append(this.getFd_status()).append(Constants.SEPARATOR);			    //13 拼车状态
 		sf.append(this.getFk_status()).append(Constants.SEPARATOR);			    //14 付款状态
 		sf.append(this.getChengke_fd_time()).append(Constants.SEPARATOR);		//15 乘客发单时间
-		sf.append(this.getChezhu_qd_time());									//16 车主抢单时间
+		sf.append(this.getChezhu_qd_time()).append(Constants.SEPARATOR);		//16 车主抢单时间
+		
+		sf.append(this.getChezhu_deviceid()).append(Constants.SEPARATOR);		//17 车主设备序列号
+		sf.append(this.getChezhu_zfb_num()).append(Constants.SEPARATOR);		//18 车主支付宝帐号
+		sf.append(this.getChezhu_zfb_password()).append(Constants.SEPARATOR);	//19 车主支付宝密码
+		sf.append(this.getChengke_deviceid()).append(Constants.SEPARATOR);		//20 乘客设备序列号
+		sf.append(this.getChengke_zfb_num()).append(Constants.SEPARATOR);		//21 乘客支付宝帐号
+		sf.append(this.getChengke_zfb_password());								//22 乘客支付宝密码
 		
 		return sf.toString();
 	}

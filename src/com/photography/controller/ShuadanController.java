@@ -121,7 +121,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/chengKeFD",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public String chengKeFD(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String chengKeFD(String id) throws UnsupportedEncodingException, ServiceException{
 		return changeStatus(id,Constants.FD_TYPE_YIFA); 
     }
 	
@@ -133,7 +133,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/cheZhuQD",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String cheZhuQD(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String cheZhuQD(String id) throws UnsupportedEncodingException, ServiceException{
 		return changeStatus(id,Constants.FD_TYPE_QDWC); 
     }
 	
@@ -145,7 +145,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/chengKEQR",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String chengKEQR(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String chengKEQR(String id) throws UnsupportedEncodingException, ServiceException{
 		return changeStatus(id,Constants.FD_TYPE_QRDC); 
     }
 	
@@ -157,7 +157,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/chengKEPJ",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String chengKEPJ(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String chengKEPJ(String id) throws UnsupportedEncodingException, ServiceException{
 		return changeStatus(id,Constants.FD_TYPE_PJWC); 
     }
 	
@@ -170,7 +170,7 @@ public class ShuadanController extends BaseController{
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getQdcgWfk",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String getQdcgWfk() throws UnsupportedEncodingException, ServiceException{
+    public synchronized String getQdcgWfk() throws UnsupportedEncodingException, ServiceException{
 		String result = null;
 		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(
 				Condition.and(Condition.eq("fd_status", Constants.FD_TYPE_QDWC), 
@@ -194,7 +194,7 @@ public class ShuadanController extends BaseController{
 	 */
 	@RequestMapping(value="/chengKEFK",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String chengKEFK(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String chengKEFK(String id) throws UnsupportedEncodingException, ServiceException{
 		String result = Constants.YES;
 		ShuadanUser user = (ShuadanUser) shuadanUserService.loadPojo(id);
 		if(user == null){
