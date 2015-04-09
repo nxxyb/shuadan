@@ -12,7 +12,6 @@ import com.photography.dao.query.Pager;
 import com.photography.dao.query.Sort;
 import com.photography.exception.ServiceException;
 import com.photography.mapping.BaseMapping;
-import com.photography.mapping.ShuadanLog;
 
 /**
  * 
@@ -23,28 +22,28 @@ import com.photography.mapping.ShuadanLog;
  */
 @Service
 public abstract class BaseServiceImpl implements IBaseService {
-	
+
 	public abstract IHibernateDao getDao();
 	/* 
 	 * @see com.photography.service.IBaseService#loadPojo(java.lang.String)
 	 */
-	public BaseMapping loadPojo(String id) {
-		return (BaseMapping) getDao().getById(getPojoClass(), id);
+	public BaseMapping loadPojo(Class<? extends BaseMapping> entityType, String id) {
+		return (BaseMapping) getDao().getById(entityType, id);
 	}
 
 	/* 
 	 * @see com.photography.service.IBaseService#loadPojoByExpression(com.photography.dao.exp.Expression, com.photography.dao.query.Sort)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<BaseMapping> loadPojoByExpression(Expression expression, Sort sort) {
-		return (List<BaseMapping>) getDao().getByQuery(getPojoClass(), expression,sort);
+	public List<BaseMapping> loadPojoByExpression(Class<? extends BaseMapping> entityType,Expression expression, Sort sort) {
+		return (List<BaseMapping>) getDao().getByQuery(entityType, expression,sort);
 	}
 
 	/* 
 	 * @see com.photography.service.IBaseService#savePojo(com.photography.mapping.BaseMapping, com.photography.mapping.User)
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void savePojo(BaseMapping pojo, ShuadanLog user) throws ServiceException {
+	public void savePojo(BaseMapping pojo) throws ServiceException {
 		if("".equals(pojo.getId())){
 			pojo.setId(null);
 		}
@@ -55,23 +54,27 @@ public abstract class BaseServiceImpl implements IBaseService {
 	/* 
 	 * @see com.photography.service.IBaseService#deletePojo(com.photography.mapping.BaseMapping, com.photography.mapping.User)
 	 */
-	public void deletePojo(BaseMapping pojo, ShuadanLog user) throws ServiceException {
+	public void deletePojo(BaseMapping pojo) throws ServiceException {
 		getDao().delete(pojo);
 	}
 
 	/* 
 	 * @see com.photography.service.IBaseService#getPojoList(com.photography.dao.query.Pager, com.photography.dao.exp.Expression, com.photography.dao.query.Sort, com.photography.mapping.User)
 	 */
-	public List<BaseMapping> getPojoList(Pager pager, Expression expression, Sort sort, ShuadanLog user) {
-		return getDao().getPojoList(getPojoClass(), pager, expression, sort, user);
+	public List<BaseMapping> getPojoList(Class<? extends BaseMapping> entityType,Pager pager, Expression expression, Sort sort) {
+		return getDao().getPojoList(entityType, pager, expression, sort,null);
 	}
 	
 	/* 
 	 * @see com.photography.service.IBaseService#addUpdateLog(com.photography.mapping.BaseMapping, com.photography.mapping.User)
 	 */
-	public void addUpdateLog(BaseMapping BaseMapping, ShuadanLog user) {
+	public void addUpdateLog(BaseMapping BaseMapping) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public List<? extends BaseMapping> queryByHql(String hql, List<?> params){
+		return (List<? extends BaseMapping>) getDao().find(hql, params);
 	}
 
 }

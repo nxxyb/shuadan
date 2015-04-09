@@ -6,6 +6,6 @@ package com.photography.service;
  * @since 2015-3-13
  * 
  */
-public interface IShuadanUserService extends IBaseService {
+public interface IShuadanService extends IBaseService {
 	
 }

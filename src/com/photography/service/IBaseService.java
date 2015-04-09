@@ -20,24 +20,18 @@ import com.photography.mapping.ShuadanLog;
 public interface IBaseService {
 	
 	/**
-	 * 获取相关业务的pojo定义
-	 * @return
-	 */
-	public Class<? extends BaseMapping> getPojoClass();
-	
-	/**
 	 * 通过主键获取固化业务pojo
 	 * @param id 固化pojo主键
 	 * @return 业务pojo
 	 */
-	public BaseMapping loadPojo(String id);
+	public BaseMapping loadPojo(Class<? extends BaseMapping> entityType,String id);
 	
 	/**
 	 * 通过表达式获取pojo列表
 	 * @param expression 表达式
 	 * @return pojo列表
 	 */
-	public List<? extends BaseMapping> loadPojoByExpression(Expression expression,Sort sort);
+	public List<? extends BaseMapping> loadPojoByExpression(Class<? extends BaseMapping> entityType,Expression expression,Sort sort);
 	
 	/**
 	 * 保存当前的pojo,需要先判断是否新建，新建的逻辑需要单独处理
@@ -45,7 +39,7 @@ public interface IBaseService {
 	 * @param pojo
 	 * @param user 
 	 */
-	public void savePojo(BaseMapping pojo, ShuadanLog user) throws ServiceException;
+	public void savePojo(BaseMapping pojo) throws ServiceException;
 	
 	
 	/**
@@ -53,7 +47,7 @@ public interface IBaseService {
 	 * @param id
 	 * @return 当出现错误时，返回错误消息
 	 */
-	public void deletePojo(BaseMapping pojo, ShuadanLog user) throws ServiceException;
+	public void deletePojo(BaseMapping pojo) throws ServiceException;
 	
 	/**
 	 * 对分页查询的支持，根据条件查询业务的列表
@@ -63,7 +57,7 @@ public interface IBaseService {
 	 * @param user 用户
 	 * @return
 	 */
-	public List<BaseMapping> getPojoList(Pager pager, Expression expression, Sort sort,ShuadanLog user);
+	public List<BaseMapping> getPojoList(Class<? extends BaseMapping> entityType,Pager pager, Expression expression, Sort sort);
 	
 	/**
 	 * 合计列表，支持分页以及查询
@@ -81,7 +75,7 @@ public interface IBaseService {
 	 * @param BaseMapping
 	 * @param user
 	 */
-	public void addUpdateLog(BaseMapping BaseMapping,ShuadanLog user);
+	public void addUpdateLog(BaseMapping BaseMapping);
 	
 	/**
 	 * 记录典型的业务操作日志
@@ -102,5 +96,10 @@ public interface IBaseService {
 	 * @param user
 	 */
 //	public void addSystemLog(BusinessProcess businessProcess,String operateType,Integer severity,String logMessage,String[] params,User user);
+	
+	/**
+	 * 执行hql
+	 */
+	public List<? extends BaseMapping> queryByHql(String hql, List<?> params);
 
 }

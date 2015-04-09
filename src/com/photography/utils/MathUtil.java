@@ -159,5 +159,20 @@ public class MathUtil {
 
 		return result;
 	}
+	
+	/**
+	 * 取一定范围随机数
+	 * @param min
+	 * @param max
+	 * @return
+	 * @author 徐雁斌
+	 */
+	public static int getRanmon(int min,int max){
+		return (int)Math.round(Math.random()*(max-min)+min);
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(MathUtil.getRanmon(0, 10));
+	}
 
 }

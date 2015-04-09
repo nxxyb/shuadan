@@ -19,6 +19,16 @@ public class Constants {
 	
 	
 	/**
+	 * 准备状态
+	 */
+	//申请，重启虚拟机
+	public final static String TYPE_SQ = "0";
+	
+	//就绪
+	public final static String TYPE_JX = "1";
+	
+	
+	/**
 	 * 乘客发单状态
 	 */
 	//0-乘客未发单 
@@ -27,16 +37,13 @@ public class Constants {
 	//1-乘客已发单  
 	public final static String FD_TYPE_YIFA = "1";
 	
-	//2-车主正在抢单 
-	public final static String FD_TYPE_QD = "2";
-	
 	//3-车主抢单完成
-	public final static String FD_TYPE_QDWC = "3";
+	public final static String FD_TYPE_QDWC = "2";
 	
 	//5-乘客确认搭乘
-	public final static String FD_TYPE_QRDC = "4";
+	public final static String FD_TYPE_QRDC = "3";
 	
 	//6-乘客评价完成
-	public final static String FD_TYPE_PJWC = "5";
+	public final static String FD_TYPE_PJWC = "4";
 	
 }

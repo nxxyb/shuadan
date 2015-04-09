@@ -2,7 +2,8 @@ package com.photography.mapping;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -19,7 +20,7 @@ public class BaseMapping implements Serializable{
 	private static final long serialVersionUID = 4967549690310825900L;
 
 	@Id
-    @Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	protected String id;
 
 	public String getId() {

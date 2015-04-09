@@ -1,6 +1,7 @@
 package com.photography.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,13 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.photography.dao.exp.Condition;
+import com.photography.dao.exp.Expression;
 import com.photography.dao.query.Sort;
 import com.photography.exception.ServiceException;
-import com.photography.mapping.ShuadanUser;
-import com.photography.service.IShuadanLogService;
-import com.photography.service.IShuadanUserService;
+import com.photography.mapping.ShuadanChengke;
+import com.photography.mapping.ShuadanChezhu;
+import com.photography.mapping.ShuadanRenwu;
+import com.photography.service.IShuadanService;
 import com.photography.utils.Constants;
 import com.photography.utils.DateUtil;
+import com.photography.utils.MathUtil;
 
 /**
  * 请求用户
@@ -29,182 +33,293 @@ public class ShuadanController extends BaseController{
 	private final static Logger log = Logger.getLogger(ShuadanController.class);
 	
 	@Autowired
-	private IShuadanUserService shuadanUserService;
+	private IShuadanService shuadanService;
 	
-	@Autowired
-	private IShuadanLogService shuadanLogService;
-
-	public void setShuadanUserService(IShuadanUserService shuadanUserService) {
-		this.shuadanUserService = shuadanUserService;
+	public void setShuadanService(IShuadanService shuadanService) {
+		this.shuadanService = shuadanService;
 	}
-
-	public void setShuadanLogService(IShuadanLogService shuadanLogService) {
-		this.shuadanLogService = shuadanLogService;
+	
+	/**
+	 * 根据deviceId查询乘客任务
+	 * http://127.0.0.1:8088/shuadan/user/findChengkeRenwu?deviceId=131580551528592
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/findChengkeRenwu",produces="application/json;charset=UTF-8")  
+    @ResponseBody
+	public synchronized String findChengkeRenwu(String deviceId){
+		String result = Constants.NO;
+		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
+				Condition.and(Condition.eq("chengke_deviceid", deviceId), Condition.eq("chengke_status", Constants.TYPE_SQ)), null);
+		if(renwus != null && !renwus.isEmpty()){
+			result = renwus.get(0).toString();
+			log.error("乘客请求任务信息：" + result);
+		}else{
+			log.error("无乘客任务信息，请申请乘客");
+		}
+		return result;
 	}
 
 	/**
-	 * 取得一个乘客
-	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * 申请一个乘客
+	 * http://127.0.0.1:8088/shuadan/user/getChengke
+	 * @throws ServiceException 
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getChengke",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public synchronized String getChengke() throws UnsupportedEncodingException{
-		String result = null;
-		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(Condition.eq("fd_status", Constants.FD_TYPE_WEIFA), new Sort("id","asc"));
-		if(users == null || users.isEmpty()){
-			result = Constants.NO;
-		}else{
-			ShuadanUser user = users.get(0);
-			result = user.toString();
-			log.error("请求获得乘客用户信息：" + result);
+    public synchronized String getChengke() throws ServiceException{
+		String result = Constants.NO;
+		List<ShuadanChengke> chengkes = (List<ShuadanChengke>) shuadanService.queryByHql("from shuadan_chengke c where c.chengke_mobile not in (select r.chengke_mobile from shuadan_renwu r where r.chengke_mobile is not null) order by c.group_type asc", null);
+		if(chengkes != null && !chengkes.isEmpty()){
+			//随机取一个
+			ShuadanChengke chengke = chengkes.get(MathUtil.getRanmon(0, chengkes.size()-1));
+			
+			//新增任务
+			ShuadanRenwu renwu = new ShuadanRenwu();
+			renwu.setChengke_mobile(chengke.getChengke_mobile());
+			renwu.setChengke_password(chengke.getChengke_password());
+			renwu.setChengke_deviceid(chengke.getChengke_deviceid());
+			renwu.setChengke_status(Constants.TYPE_SQ);
+			renwu.setGroup_type(chengke.getGroup_type());
+			renwu.setFd_status(Constants.FD_TYPE_WEIFA);
+			renwu.setFk_status(Constants.NO);
+			renwu.setChengke_zfb_num(chengke.getChengke_zfb_num());
+			renwu.setChengke_zfb_password(chengke.getChengke_zfb_password());
+			renwu.setChengke_sb_bstp(chengke.getChengke_sb_bstp());
+			renwu.setChengke_xb_bstp(chengke.getChengke_xb_bstp());
+			
+			shuadanService.savePojo(renwu);
+			
+			result = renwu.toString();
+			log.error("申请乘客任务信息：" + result);
 		}
         return result;  
     }
 	
 	/**
-	 * 取得一个车主
+	 * 根据deviceId查询车主任务
+	 * http://127.0.0.1:8088/shuadan/user/findChezhuRenwu?deviceId=908050227136524
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/findChezhuRenwu",produces="application/json;charset=UTF-8")  
+    @ResponseBody
+	public synchronized String findChezhuRenwu(String deviceId){
+		String result = Constants.NO;
+		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
+				Condition.and(Condition.eq("chezhu_deviceid", deviceId), Condition.eq("chezhu_status", Constants.TYPE_SQ)), null);
+		if(renwus != null && !renwus.isEmpty()){
+			result = renwus.get(0).toString();
+			log.error("车主请求任务信息：" + result);
+		}else{
+			log.error("无车主任务信息，请申请车主");
+		}
+		return result;
+	}
+	
+	/**
+	 * 申请一个车主
+	 * http://127.0.0.1:8088/shuadan/user/getChezhu
+	 * @return
 	 * @throws ServiceException 
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getChezhu",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public synchronized String getChezhu() throws UnsupportedEncodingException, ServiceException{
-		String result = null;
-		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(Condition.eq("fd_status", Constants.FD_TYPE_YIFA), new Sort("id","asc"));
-		if(users == null || users.isEmpty()){
-			log.error("目前还没有符合条件的车主");
-			result = Constants.NO;
+    public synchronized String getChezhu() throws ServiceException{
+		String result = Constants.NO;
+		Expression exp1 = Condition.or(Condition.eq("chengke_status", Constants.TYPE_SQ), Condition.eq("chengke_status", Constants.TYPE_JX));
+		Expression exp2 = Condition.eq("chezhu_status", null);
+		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
+				Condition.and(exp1, exp2), null);
+		if(renwus == null || renwus.isEmpty()){
+			log.error("当前没有任务，无法分配车主，请稍候再试！");
+			return result;
 		}else{
-			ShuadanUser user = users.get(0);
-			result = user.toString();
-			log.error("请求获得车主用户信息：" + result);
-			
-			//将该条信息状态置为  车主正在抢单 
-			user.setFd_status(Constants.FD_TYPE_QD);
-			shuadanUserService.savePojo(user, null);
-			log.error("("+ user.getChezhu_name() + "," + user.getChezhu_mobile() +  ")" + " 车主开始抢单：" + DateUtil.date2String(new Date()));
+			ShuadanRenwu  renwu = renwus.get(0);
+			List<String> params = new ArrayList<String>();
+			params.add(renwu.getGroup_type());
+			List<ShuadanChezhu> chezhus = (List<ShuadanChezhu>) shuadanService.queryByHql("from shuadan_chezhu c where c.group_type=? and c.chezhu_mobile not in (select r.chezhu_mobile from shuadan_renwu r where r.chezhu_mobile is not null) order by c.group_type asc", params);
+			if(chezhus != null && !chezhus.isEmpty()){
+				//随机取一个
+				ShuadanChezhu chezhu = chezhus.get(MathUtil.getRanmon(0, chezhus.size()-1));
+				
+				//更新任务
+				renwu.setChezhu_mobile(chezhu.getChezhu_mobile());
+				renwu.setChezhu_password(chezhu.getChezhu_password());
+				renwu.setChezhu_deviceid(chezhu.getChezhu_deviceid());
+				renwu.setChezhu_status(Constants.TYPE_SQ);
+				shuadanService.savePojo(renwu);
+				
+				result = renwu.toString();
+				log.error("申请车主任务信息：" + result);
+			}
+	        return result;  
 		}
-        return result;  
     }
 	
 	/**
-	 * 根据id取得车主和乘客
+	 * 乘客任务就绪
+	 * http://127.0.0.1:8088/shuadan/user/chengkeJX?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws ServiceException 
 	 */
-	@RequestMapping(value="/getInfo",produces="application/json;charset=UTF-8")  
+	@RequestMapping(value="/chengkeJX",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public synchronized String getInfo(String id) throws UnsupportedEncodingException{
-		String result = null;
-		ShuadanUser user = (ShuadanUser) shuadanUserService.loadPojo(id);
-		if(user == null){
-			log.error("未找到用户ID：" + id);
-			result = Constants.NO;
-			return result;
+	public synchronized String chengkeJX(String renwuId) throws ServiceException{
+		String result = Constants.NO;
+		ShuadanRenwu renwu = (ShuadanRenwu) shuadanService.loadPojo(ShuadanRenwu.class, renwuId);
+		if(renwu != null){
+			renwu.setChengke_status(Constants.TYPE_JX);
+			shuadanService.savePojo(renwu);
+			result = Constants.YES;
+			log.error("乘客任务就绪,ID：" + renwuId);
+		}
+		return result;
+	}
+	
+	/**
+	 * 车主任务就绪
+	 * http://127.0.0.1:8088/shuadan/user/chezhuJX?renwuId=2
+	 * @return
+	 * @throws ServiceException 
+	 */
+	@RequestMapping(value="/chezhuJX",produces="application/json;charset=UTF-8")  
+    @ResponseBody
+	public synchronized String chezhuJX(String renwuId) throws ServiceException{
+		String result = Constants.NO;
+		ShuadanRenwu renwu = (ShuadanRenwu) shuadanService.loadPojo(ShuadanRenwu.class, renwuId);
+		if(renwu != null){
+			renwu.setChezhu_status(Constants.TYPE_JX);
+			shuadanService.savePojo(renwu);
+			result = Constants.YES;
+			log.error("车主任务就绪,ID：" + renwuId);
+		}
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 根据id取得任务信息
+	 * http://127.0.0.1:8088/shuadan/user/getInfo?renwuId=2
+	 * @return
+	 */
+	@RequestMapping(value="/getInfo",produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public synchronized String getInfo(String renwuId) throws UnsupportedEncodingException{
+		String result = Constants.NO;
+		ShuadanRenwu renwu = (ShuadanRenwu) shuadanService.loadPojo(ShuadanRenwu.class,renwuId);
+		if(renwu == null){
+			log.error("未找到任务ID：" + renwuId);
 		}else{
-			result = user.toString();
-			log.error("根据ID(" + id + ") 获得车主用户信息：" + result);
-			return result;
+			result = renwu.toString();
+			log.error("根据ID(" + renwuId + ") 获得任务信息：" + result);
         }
+		return result;
 		
     }
 	
 	/**
 	 * 乘客发单
+	 * http://127.0.0.1:8088/shuadan/user/chengKeFD?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@RequestMapping(value="/chengKeFD",produces="application/json;charset=UTF-8")  
     @ResponseBody
-    public synchronized String chengKeFD(String id) throws UnsupportedEncodingException, ServiceException{
-		return changeStatus(id,Constants.FD_TYPE_YIFA); 
+    public synchronized String chengKeFD(String renwuId) throws ServiceException{
+		return changeStatus(renwuId,Constants.FD_TYPE_YIFA); 
     }
 	
 	/**
 	 * 车主抢单完成
+	 * http://127.0.0.1:8088/shuadan/user/cheZhuQD?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@RequestMapping(value="/cheZhuQD",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public synchronized String cheZhuQD(String id) throws UnsupportedEncodingException, ServiceException{
-		return changeStatus(id,Constants.FD_TYPE_QDWC); 
+    public synchronized String cheZhuQD(String renwuId) throws ServiceException{
+		return changeStatus(renwuId,Constants.FD_TYPE_QDWC); 
     }
 	
 	/**
 	 * 乘客确认搭乘
+	 * http://127.0.0.1:8088/shuadan/user/chengKEQR?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@RequestMapping(value="/chengKEQR",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public synchronized String chengKEQR(String id) throws UnsupportedEncodingException, ServiceException{
-		return changeStatus(id,Constants.FD_TYPE_QRDC); 
+    public synchronized String chengKEQR(String renwuId) throws ServiceException{
+		return changeStatus(renwuId,Constants.FD_TYPE_QRDC); 
     }
 	
 	/**
 	 * 乘客评价完成
+	 * http://127.0.0.1:8088/shuadan/user/chengKEPJ?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@RequestMapping(value="/chengKEPJ",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public synchronized String chengKEPJ(String id) throws UnsupportedEncodingException, ServiceException{
-		return changeStatus(id,Constants.FD_TYPE_PJWC); 
+    public synchronized String chengKEPJ(String renwuId) throws ServiceException{
+		return changeStatus(renwuId,Constants.FD_TYPE_PJWC); 
     }
 	
 	/**
-	 * 取得已抢单成功且未付款的乘客
+	 * 取得已抢单成功且未付款的任务
+	 * http://127.0.0.1:8088/shuadan/user/getQdcgWfk
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/getQdcgWfk",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public synchronized String getQdcgWfk() throws UnsupportedEncodingException, ServiceException{
-		String result = null;
-		List<ShuadanUser> users = (List<ShuadanUser>) shuadanUserService.loadPojoByExpression(
-				Condition.and(Condition.eq("fd_status", Constants.FD_TYPE_QDWC), 
-				Condition.or(Condition.eq("fk_status", null), Condition.eq("fk_status", Constants.NO))
-			) , new Sort("id","asc"));
+    public synchronized String getQdcgWfk() throws ServiceException{
+		String result = Constants.NO;
+		List<Expression> exps1 = new ArrayList<Expression>();
+		exps1.add(Condition.eq("fd_status", Constants.FD_TYPE_QDWC));
+		exps1.add(Condition.eq("fd_status", Constants.FD_TYPE_QRDC));
+		exps1.add(Condition.eq("fd_status", Constants.FD_TYPE_PJWC));
+		
+		List<Expression> exps2 = new ArrayList<Expression>();
+		exps2.add(Condition.eq("fk_status", null));
+		exps2.add(Condition.eq("fk_status", Constants.NO));
+		
+		List<ShuadanRenwu> users = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class,
+				Condition.and(Condition.or(exps1),Condition.or(exps2)), new Sort("id","asc"));
 		if(users == null || users.isEmpty()){
 			result = Constants.NO;
+			log.error("无抢单完成且未付款任务信息");
 		}else{
-			ShuadanUser user = users.get(0);
+			ShuadanRenwu user = users.get(0);
 			result = user.toString();
-			log.error("请求获得抢单完成且未付款乘客用户信息：" + result);
+			log.error("请求获得抢单完成且未付款任务信息：" + result);
 		}
         return result;  
     }
 	
 	/**
 	 * 乘客付款
+	 * http://127.0.0.1:8088/shuadan/user/chengKEFK?renwuId=2
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws ServiceException 
 	 */
 	@RequestMapping(value="/chengKEFK",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public synchronized String chengKEFK(String id) throws UnsupportedEncodingException, ServiceException{
+    public synchronized String chengKEFK(String renwuId) throws ServiceException{
 		String result = Constants.YES;
-		ShuadanUser user = (ShuadanUser) shuadanUserService.loadPojo(id);
+		ShuadanRenwu user = (ShuadanRenwu) shuadanService.loadPojo(ShuadanRenwu.class,renwuId);
 		if(user == null){
-			log.error("未找到用户ID：" + id);
+			log.error("未找到任务ID：" + renwuId);
 			result = Constants.NO;
 		}else{
 			user.setFk_status(Constants.YES);
-			String time = DateUtil.date2String(new Date());
-			log.error("("+ user.getChengke_name() + "," + user.getChengke_mobile() +  ")" + " 乘客付款完成：" + time);
-			shuadanUserService.savePojo(user, null);
+			String time = DateUtil.date2String(new Date(),null);
+			log.error("("+  user.getChengke_mobile() +  ")" + " 乘客付款完成：" + time);
+			shuadanService.savePojo(user);
 		}
 		return result;
     }
@@ -218,36 +333,36 @@ public class ShuadanController extends BaseController{
 	 */
 	private synchronized String changeStatus(String id,String status) throws ServiceException{
 		String result = Constants.YES;
-		ShuadanUser user = (ShuadanUser) shuadanUserService.loadPojo(id);
+		ShuadanRenwu user = (ShuadanRenwu) shuadanService.loadPojo(ShuadanRenwu.class,id);
 		if(user == null){
-			log.error("未找到用户ID：" + id);
+			log.error("未找到任务ID：" + id);
 			result = Constants.NO;
 			return result;
 			
 		}else if(Constants.FD_TYPE_YIFA.equals(status)){  //乘客发单
 			user.setFd_status(status);
-			String time = DateUtil.date2String(new Date());
+			String time = DateUtil.date2String(new Date(),null);
 			user.setChengke_fd_time(time);
-			log.error("("+ user.getChengke_name() + "," + user.getChengke_mobile() +  ")" + " 乘客发单：" + time);
+			log.error("(" + user.getChengke_mobile() +  ")" + " 乘客发单：" + time);
 			
 		}else if(Constants.FD_TYPE_QDWC.equals(status)){  //车主抢单完成
 			user.setFd_status(status);
-			String time = DateUtil.date2String(new Date());
+			String time = DateUtil.date2String(new Date(),null);
 			user.setChezhu_qd_time(time);
-			log.error("("+ user.getChezhu_name() + "," + user.getChezhu_mobile() +  ")" + " 抢单完成：" + time);
+			log.error("("+ user.getChezhu_mobile() +  ")" + " 抢单完成：" + time);
 			
 		}else if(Constants.FD_TYPE_QRDC.equals(status)){  //乘客确认搭乘
 			user.setFd_status(status);
-			String time = DateUtil.date2String(new Date());
-			log.error("("+ user.getChengke_name() + "," + user.getChengke_mobile() +  ")" + " 确认搭乘：" + time);
+			String time = DateUtil.date2String(new Date(),null);
+			log.error("("+ user.getChengke_mobile() +  ")" + " 确认搭乘：" + time);
 			
 		}else if(Constants.FD_TYPE_PJWC.equals(status)){  //乘客评价完成
 			user.setFd_status(status);
-			String time = DateUtil.date2String(new Date());
-			log.error("("+ user.getChengke_name() + "," + user.getChengke_mobile() +  ")" + " 评价完成：" + time);
+			String time = DateUtil.date2String(new Date(),null);
+			log.error("("+ user.getChengke_mobile() +  ")" + " 评价完成：" + time);
 		}
 		
-		shuadanUserService.savePojo(user, null);
+		shuadanService.savePojo(user);
 		
 		return result;  
 	}
