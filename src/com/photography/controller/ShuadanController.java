@@ -39,25 +39,25 @@ public class ShuadanController extends BaseController{
 		this.shuadanService = shuadanService;
 	}
 	
-	/**
-	 * 根据deviceId查询乘客任务
-	 * http://127.0.0.1:8088/shuadan/user/findChengkeRenwu?deviceId=131580551528592
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/findChengkeRenwu",produces="application/json;charset=UTF-8")  
-    @ResponseBody
-	public synchronized String findChengkeRenwu(String deviceId){
-		String result = Constants.NO;
-		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
-				Condition.and(Condition.eq("chengke_deviceid", deviceId), Condition.eq("chengke_status", Constants.TYPE_SQ)), null);
-		if(renwus != null && !renwus.isEmpty()){
-			result = renwus.get(0).toString();
-			log.error("乘客请求任务信息：" + result);
-		}else{
-			log.error("无乘客任务信息，请申请乘客");
-		}
-		return result;
-	}
+//	/**
+//	 * 根据deviceId查询乘客任务
+//	 * http://127.0.0.1:8088/shuadan/user/findChengkeRenwu?mobile=18622535271
+//	 */
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value="/findChengkeRenwu",produces="application/json;charset=UTF-8")  
+//    @ResponseBody
+//	public synchronized String findChengkeRenwu(String mobile){
+//		String result = Constants.NO;
+//		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
+//				Condition.and(Condition.eq("chengke_mobile", mobile), Condition.eq("chengke_status", Constants.TYPE_SQ)), null);
+//		if(renwus != null && !renwus.isEmpty()){
+//			result = renwus.get(0).toString();
+//			log.error("乘客请求任务信息：" + result);
+//		}else{
+//			log.error("无乘客任务信息，请申请乘客");
+//		}
+//		return result;
+//	}
 
 	/**
 	 * 申请一个乘客
@@ -96,26 +96,26 @@ public class ShuadanController extends BaseController{
         return result;  
     }
 	
-	/**
-	 * 根据deviceId查询车主任务
-	 * http://127.0.0.1:8088/shuadan/user/findChezhuRenwu?deviceId=908050227136524
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/findChezhuRenwu",produces="application/json;charset=UTF-8")  
-    @ResponseBody
-	public synchronized String findChezhuRenwu(String deviceId){
-		String result = Constants.NO;
-		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
-				Condition.and(Condition.eq("chezhu_deviceid", deviceId), Condition.eq("chezhu_status", Constants.TYPE_SQ)), null);
-		if(renwus != null && !renwus.isEmpty()){
-			result = renwus.get(0).toString();
-			log.error("车主请求任务信息：" + result);
-		}else{
-			log.error("无车主任务信息，请申请车主");
-		}
-		return result;
-	}
+//	/**
+//	 * 根据deviceId查询车主任务
+//	 * http://127.0.0.1:8088/shuadan/user/findChezhuRenwu?deviceId=908050227136524
+//	 * @return
+//	 */
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value="/findChezhuRenwu",produces="application/json;charset=UTF-8")  
+//    @ResponseBody
+//	public synchronized String findChezhuRenwu(String deviceId){
+//		String result = Constants.NO;
+//		List<ShuadanRenwu> renwus = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, 
+//				Condition.and(Condition.eq("chezhu_deviceid", deviceId), Condition.eq("chezhu_status", Constants.TYPE_SQ)), null);
+//		if(renwus != null && !renwus.isEmpty()){
+//			result = renwus.get(0).toString();
+//			log.error("车主请求任务信息：" + result);
+//		}else{
+//			log.error("无车主任务信息，请申请车主");
+//		}
+//		return result;
+//	}
 	
 	/**
 	 * 申请一个车主
@@ -172,7 +172,7 @@ public class ShuadanController extends BaseController{
 		if(renwu != null){
 			renwu.setChengke_status(Constants.TYPE_JX);
 			shuadanService.savePojo(renwu);
-			result = Constants.YES;
+			result = renwu.toString();
 			log.error("乘客任务就绪,ID：" + renwuId);
 		}
 		return result;
@@ -192,7 +192,7 @@ public class ShuadanController extends BaseController{
 		if(renwu != null){
 			renwu.setChezhu_status(Constants.TYPE_JX);
 			shuadanService.savePojo(renwu);
-			result = Constants.YES;
+			result = renwu.toString();
 			log.error("车主任务就绪,ID：" + renwuId);
 		}
 		return result;

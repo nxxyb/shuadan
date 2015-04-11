@@ -329,8 +329,20 @@ public class DateUtil {
 		return calendar.getTime();
 	}
 	
+	/**
+	 * 得到当前时间是上午还是下午
+	 */
+	public static String getSX(){
+		Calendar calendar = Calendar.getInstance();
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		if(hour < 12){
+			return Constants.FD_BS_SW;
+		}else{
+			return Constants.FD_BS_XW;
+		}
+	}
+	
 	public static void main(String[] args) {
-		Date date = DateUtil.parseDate("2012-03-07");
-		System.out.println(getDateByIncrement(date,-4).toLocaleString());
+		System.out.println(DateUtil.getSX());
 	}
 }

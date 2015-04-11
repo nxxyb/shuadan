@@ -27,6 +27,18 @@ public class Constants {
 	//就绪
 	public final static String TYPE_JX = "1";
 	
+	/**
+	 * 发单标识
+	 */
+	//上午
+	public final static String FD_BS_SW = "0";
+	
+	//下午
+	public final static String FD_BS_XW = "1";
+	
+	//附近
+	public final static String FD_BS_FJ = "2";
+	
 	
 	/**
 	 * 乘客发单状态

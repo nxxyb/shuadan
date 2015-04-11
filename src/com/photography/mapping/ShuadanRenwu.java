@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.photography.utils.Constants;
+import com.photography.utils.DateUtil;
 
 /**
  * 搭乘任务
@@ -259,21 +260,22 @@ public class ShuadanRenwu extends BaseMapping{
 	public String toString(){
 		StringBuffer sf = new StringBuffer();
 		sf.append(this.getId()).append(Constants.SEPARATOR);					//0 id
-		sf.append(this.getChezhu_mobile()).append(Constants.SEPARATOR);			//2 车主手机
-		sf.append(this.getChezhu_password()).append(Constants.SEPARATOR);		//3 车主密码
-		sf.append(this.getChezhu_deviceid()).append(Constants.SEPARATOR);		//7 车主设备序列号
-		sf.append(this.getChezhu_status()).append(Constants.SEPARATOR);			//7 车主状态
-		sf.append(this.getChengke_mobile()).append(Constants.SEPARATOR);		//2 乘客手机
-		sf.append(this.getChengke_password()).append(Constants.SEPARATOR);		//3 乘客密码
+		sf.append(this.getChezhu_mobile()).append(Constants.SEPARATOR);			//1 车主手机
+		sf.append(this.getChezhu_password()).append(Constants.SEPARATOR);		//2 车主密码
+		sf.append(this.getChezhu_deviceid()).append(Constants.SEPARATOR);		//3 车主设备序列号
+		sf.append(this.getChezhu_status()).append(Constants.SEPARATOR);			//4 车主状态
+		sf.append(this.getChengke_mobile()).append(Constants.SEPARATOR);		//5 乘客手机
+		sf.append(this.getChengke_password()).append(Constants.SEPARATOR);		//6 乘客密码
 		sf.append(this.getChengke_deviceid()).append(Constants.SEPARATOR);		//7 乘客设备序列号
-		sf.append(this.getChengke_zfb_num()).append(Constants.SEPARATOR);		//7 乘客支付宝帐号
-		sf.append(this.getChengke_zfb_password()).append(Constants.SEPARATOR);	//7 乘客支付宝密码
-		sf.append(this.getChengke_status()).append(Constants.SEPARATOR);		//7 乘客状态
-		sf.append(this.getFd_status()).append(Constants.SEPARATOR);				//7 发单状态 
-		sf.append(this.getFk_status()).append(Constants.SEPARATOR);				//7 乘客付款状态 
-		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//7 乘客上班标识图片名称
-		sf.append(this.getChengke_xb_bstp()).append(Constants.SEPARATOR);		//7 乘客下班标识图片名称
-		sf.append(this.getGroup_type());										//7 分组
+		sf.append(this.getChengke_zfb_num()).append(Constants.SEPARATOR);		//8 乘客支付宝帐号
+		sf.append(this.getChengke_zfb_password()).append(Constants.SEPARATOR);	//9 乘客支付宝密码
+		sf.append(this.getChengke_status()).append(Constants.SEPARATOR);		//10 乘客状态
+		sf.append(this.getFd_status()).append(Constants.SEPARATOR);				//11 发单状态 
+		sf.append(this.getFk_status()).append(Constants.SEPARATOR);				//12 乘客付款状态 
+		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//13 乘客上班标识图片名称
+		sf.append(this.getChengke_xb_bstp()).append(Constants.SEPARATOR);		//14 乘客下班标识图片名称
+		sf.append(this.getGroup_type()).append(Constants.SEPARATOR);			//15 分组
+		sf.append(DateUtil.getSX());											//16 发单标识 0-上班发单  1-下班发单 2-附近发单
 		
 		return sf.toString();
 	}
