@@ -367,5 +367,50 @@ public class ShuadanController extends BaseController{
 		return result;  
 	}
 	
+	/**
+	 * 取得已抢单成功且未确认搭乘的任务
+	 * http://127.0.0.1:8088/shuadan/user/getWQR
+	 * @return
+	 * @throws ServiceException 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/getWQR",produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public synchronized String getWQR() throws ServiceException{
+		String result = Constants.NO;
+		List<Expression> exps = new ArrayList<Expression>();
+		exps.add(Condition.eq("fd_status", Constants.FD_TYPE_QDWC));
+		exps.add(Condition.le("chezhu_qd_time", DateUtil.date2String(DateUtil.subHour(-35), null)));
+		exps.add(Condition.eq("fk_status", Constants.YES));
+		
+		List<ShuadanRenwu> users = (List<ShuadanRenwu>) shuadanService.loadPojoByExpression(ShuadanRenwu.class, Condition.and(exps),null);
+		if(users == null || users.isEmpty()){
+			result = Constants.NO;
+			log.error("无未确认搭乘任务信息");
+		}else{
+			ShuadanRenwu user = users.get(0);
+			result = user.toString();
+			log.error("请求获得未确认搭乘任务信息：" + result);
+		}
+        return result;  
+    }
 	
+	/**
+	 * 得到乘客随机评价内容
+	 * http://127.0.0.1:8088/shuadan/user/getChengkePJ
+	 * @return
+	 * @throws ServiceException 
+	 */
+	@RequestMapping(value="/getChengkePJNR",produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public synchronized String getChengkePJNR() throws ServiceException{
+		String result = Constants.NO;
+		try{
+			result = Constants.chengkePJ.get(MathUtil.getRanmon(0, Constants.chengkePJ.size()-1));
+		}catch(Exception e){
+			log.error(e);
+		}
+		return result;
+	}
+		
 }

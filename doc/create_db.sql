@@ -18,8 +18,8 @@ CREATE TABLE `shuadan_chengke` (
   `chengke_zfb_num` varchar(40) comment '乘客支付宝帐号',
   `chengke_zfb_password` varchar(40) comment '乘客支付宝密码',
   `group_type` varchar(40) comment '分组',
-  `chengke_sb_bstp` varchar(40) comment '乘客上班标识图片名称',
-  `chengke_xb_bstp` varchar(40) comment '乘客下班标识图片名称'
+  `chengke_sb_bstp` varchar(40) comment '乘客标识图片名称',
+  `chengke_xb_bstp` varchar(40) comment '乘客标识图片名称'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /**车主信息表 */

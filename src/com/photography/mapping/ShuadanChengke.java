@@ -195,8 +195,8 @@ public class ShuadanChengke extends BaseMapping{
 		sf.append(this.getChengke_zfb_num()).append(Constants.SEPARATOR);		//8 乘客支付宝帐号
 		sf.append(this.getChengke_zfb_password()).append(Constants.SEPARATOR);	//9 乘客支付宝密码
 		sf.append(this.getGroup_type()).append(Constants.SEPARATOR);			//10 分组
-		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//11 乘客上班标识图片名称
-		sf.append(this.getChengke_xb_bstp());									//12 乘客下班标识图片名称
+		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//11 乘客标识图片名称
+		sf.append(this.getChengke_xb_bstp());									//12 乘客标识图片名称
 		
 		return sf.toString();
 	}

@@ -82,13 +82,13 @@ public class ShuadanRenwu extends BaseMapping{
 	private String group_type;
 	
 	/**
-	 * 乘客上班标识图片名称
+	 * 乘客标识图片名称
 	 */
 	@Column(name="chengke_sb_bstp")
 	private String chengke_sb_bstp;
 	
 	/**
-	 * 乘客下班标识图片名称
+	 * 乘客标识图片名称
 	 */
 	@Column(name="chengke_xb_bstp")
 	private String chengke_xb_bstp;
@@ -272,8 +272,8 @@ public class ShuadanRenwu extends BaseMapping{
 		sf.append(this.getChengke_status()).append(Constants.SEPARATOR);		//10 乘客状态
 		sf.append(this.getFd_status()).append(Constants.SEPARATOR);				//11 发单状态 
 		sf.append(this.getFk_status()).append(Constants.SEPARATOR);				//12 乘客付款状态 
-		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//13 乘客上班标识图片名称
-		sf.append(this.getChengke_xb_bstp()).append(Constants.SEPARATOR);		//14 乘客下班标识图片名称
+		sf.append(this.getChengke_sb_bstp()).append(Constants.SEPARATOR);		//13 乘客标识图片名称
+		sf.append(this.getChengke_xb_bstp()).append(Constants.SEPARATOR);		//14 乘客标识图片名称
 		sf.append(this.getGroup_type()).append(Constants.SEPARATOR);			//15 分组
 		sf.append(DateUtil.getSX());											//16 发单标识 0-上班发单  1-下班发单 2-附近发单
 		

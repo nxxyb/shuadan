@@ -342,6 +342,18 @@ public class DateUtil {
 		}
 	}
 	
+	/**
+	 * 得到当前时间减XX分钟的时间
+	 * @param subMinute
+	 * @return
+	 * @author 徐雁斌
+	 */
+	public static Date subHour(int subMinute){
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MINUTE, subMinute);
+		return calendar.getTime();
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(DateUtil.getSX());
 	}
